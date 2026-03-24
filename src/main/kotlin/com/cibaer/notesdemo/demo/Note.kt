@@ -1,14 +1,8 @@
 package com.cibaer.notesdemo.demo
 
-public class Note {
+import jakarta.validation.constraints.NotEmpty
 
-    public var id: String = ""
-
-
-    constructor(id: String, fileName: String) {
-        this.id = id
-        this.fileName = fileName
-    }
-
-    public var fileName: String = ""
-}
+data class Note(
+    var id: String = "0",
+    var fileName: String = "default"
+)

@@ -1,0 +1,23 @@
+Delete Call:
+
+    (async function deleteNote(1) {
+              await fetch("http://localhost:8080/notes/" + id, {
+                        method: "DELETE"
+              })
+    })("#ID_HERE")
+
+Post Call:
+
+    (async function createNote() {
+              let note = {"fileName": "TestFileNameHello"};
+              await fetch("http://localhost:8080/notes", {
+                        method: "POST",
+                        headers: {
+                                  "Accept": "application/json",
+                                  "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(note)
+                        })
+                        .then(result => result.text())
+                        .then(text => alert(text));
+    })();
