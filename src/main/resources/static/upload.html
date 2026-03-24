@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2> Note Upload </h2>
+<input id="fileupload" type="file" name="fileupload" />
+<button id="uploadbutton" onclick="uploadFile()"> Upload </button>
+
+<script>
+  async function uploadFile() {
+      let formData = new FormData();
+      formData.append("data", fileupload.files[0]);
+      await fetch('http://localhost:8080/notes', {
+          method: "POST",
+          body: formData
+      }).then(result =>    result.text())
+          .then(text => alert(text));
+  }
+</script>
+</body>
+</html>
