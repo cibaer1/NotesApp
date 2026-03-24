@@ -1,7 +1,10 @@
 package com.cibaer.notesdemo.demo
 
 import jakarta.validation.Valid
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -44,6 +47,15 @@ public class NoteController {
     fun deleteNote(@PathVariable id: String): Note? {
         db.remove(id)
         return null
+    }
+
+    @GetMapping("/notes/{id}/content", produces = [MediaType.TEXT_PLAIN_VALUE])
+    fun getNoteContent(@PathVariable id: String): ResponseEntity<ByteArray> {
+        val note = db[id] ?:return ResponseEntity.notFound().build()
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.TEXT_PLAIN
+        return ResponseEntity(note.data, headers, HttpStatus.OK)
+
     }
 
     @PostMapping("/notes", consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])

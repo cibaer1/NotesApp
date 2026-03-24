@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Note</title>
+</head>
+<body>
+<h2>Note Content</h2>
+<pre id="content"></pre>
+<div id="output"></div>
+
+<script>
+    const id = new URLSearchParams(window.location.search).get("id");
+
+    async function loadNote() {
+        if (id) {
+            const response = await fetch(`/notes/${id}/content`);
+            const text = await response.text();
+            document.getElementById("content").innerText = text;
+        } else {
+            const response = await fetch(`/notes`);
+            const notes = await response.json();
+            const output = document.getElementById("output");
+            output.innerHTML = "";
+            Object.values(notes).forEach((note) => {
+                const link = document.createElement("a");
+                link.href = `viewnotes.html?id=${note.id}`;
+                link.innerText = note.fileName;
+                output.appendChild(link);
+                output.appendChild(document.createElement("br"));
+            });
+        }
+    }
+
+    loadNote();
+</script>
+</body>
+</html>
