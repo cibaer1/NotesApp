@@ -1,6 +1,7 @@
 package com.cibaer.notesdemo.demo
 
 import jakarta.validation.Valid
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -19,13 +20,8 @@ import java.util.UUID
 @RestController
 public class NoteController {
 
-    private val testNote = Note("0", "testFileName")
-    private val testNote2 = Note("1", "testFileName2")
-    private val db = hashMapOf<String, Note?>(
-        "0" to testNote,
-        "1" to testNote2
-
-    )
+    @Autowired
+    lateinit var db: TempDB
 
 
 
@@ -35,23 +31,24 @@ public class NoteController {
 
     @GetMapping("/notes")
     fun showAllNotes(): HashMap<String, Note?> {
-        return db
+
+        return db.db
     }
 
     @GetMapping("/notes/{id}")
     fun getNote(@PathVariable id: String): Note? {
-        return db[id]
+        return db.db[id]
     }
 
     @DeleteMapping("/notes/{id}")
     fun deleteNote(@PathVariable id: String): Note? {
-        db.remove(id)
+        db.db.remove(id)
         return null
     }
 
     @GetMapping("/notes/{id}/content", produces = [MediaType.TEXT_PLAIN_VALUE])
     fun getNoteContent(@PathVariable id: String): ResponseEntity<ByteArray> {
-        val note = db[id] ?:return ResponseEntity.notFound().build()
+        val note = db.db[id] ?:return ResponseEntity.notFound().build()
         val headers = HttpHeaders()
         headers.contentType = MediaType.TEXT_PLAIN
         return ResponseEntity(note.data, headers, HttpStatus.OK)
@@ -65,7 +62,7 @@ public class NoteController {
             fileName = file.originalFilename ?: "unknown",
             data = file.bytes
         )
-        db[note.id] = note
+        db.db[note.id] = note
         return note
     }
 }
